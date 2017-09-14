@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace oneSolutionForum.Core.ViewModel
+namespace ClassLibrary1
 {
-    public class UserModel
+    public class Class1
     {
-
     }
 }
