@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oneSolutionForum.Core", "oneSolutionForum.Core\oneSolutionForum.Core.csproj", "{A5BA054C-74BA-402D-ACA7-C35F95627965}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oneSolutionForum.Infrastructure", "oneSolutionForum.Infrastructure\oneSolutionForum.Infrastructure.csproj", "{BE8F1B32-8BFD-4654-AF89-7AB9744DE3A4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AE46033F-E9E9-42A8-A9D9-4A9F8685E526} = {AE46033F-E9E9-42A8-A9D9-4A9F8685E526}
+		{5B11A2D2-1B7D-427B-B4FA-045F63B41B9A} = {5B11A2D2-1B7D-427B-B4FA-045F63B41B9A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
