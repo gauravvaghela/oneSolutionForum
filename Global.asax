@@ -514,3 +514,139 @@ namespace CRUDADO.Controllers
 }
           
        
+@model IEnumerable<CRUDADO.Employee>
+@*@using PagedList.Mvc
+    @model PagedList.IPagedList<CRUDADO.Employee>*@
+
+<p>
+    @Html.ActionLink("Create New", "AddEmployee")
+</p>
+@using (Html.BeginForm())
+{
+    <input type="search" name="search" id="search" value="" />
+    <input type="submit" name="Submit" value="Search" />
+}
+@*@Html.DropDownListFor("EmployeeName", new SelectList(ViewBag.EmployeeList))*@
+@using (Html.BeginForm("Export", "Employee", FormMethod.Post))
+{
+    <input type="hidden" name="GridExport" />
+    <input type="submit" id="btnSubmit" value="Export" />
+}
+<div id="Grid">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink("FirstName", "GetAll", new { Sorting_Order = ViewBag.SortingFirstName })
+                @*@Html.DisplayNameFor(model => model.FirstName)*@
+            </th>
+            <th>
+                @Html.ActionLink("LastName", "GetAll", new { Sorting_Order = ViewBag.SortingLastName })
+                @*@Html.DisplayNameFor(model => model.LastName)*@
+            </th>
+            <th>
+                @*@Html.ActionLink("Salary", "GetAll", new { Sorting_Order = ViewBag.SortingSalary })*@
+                Salary
+            </th>
+            <th>
+                Gender
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            @*@Html.HiddenFor(modelItem => item.EmployeeId);*@
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditEmployee", new { id = item.EmployeeId }) |
+                    @*@Html.ActionLink("Details", "Details", new { id=item.EmployeeId }) |*@
+                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeId })
+                </td>
+                @*<td>
+                        @Html.DropDownListFor(x => item.EmployeeName, (IEnumerable<SelectListItem>)ViewBag.EmployeeList)
+                    </td>*@
+            </tr>
+        }
+    </table>
+</div>
+<div id="data"></div>
+@*@Html.DropDownList("Test",(IEnumerable<SelectListItem>)ViewBag.EmployeeList,"Select")*@
+@*<h3>@Html.PagedListPager(Model,page => Url.Action("GetAll",new { page}))</h3>*@
+
+
+<button class="popup" id="save">Add Employee</button>
+<div id="data">
+</div>
+<div class="SavePopUp" style="display:none;">
+</div>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/scripts/jquery-1.10.2.min.js"></script>
+<script src="~/scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$(function () {
+        //    $("#btnSubmit").click(function () {
+        //        $("input[name='GridExport']").val($("#Grid").html())
+        //    });
+        //});        
+        LoadData();
+        //$("#SavePopUp").dialog(
+        //    {
+        //        autoOpen:false
+        //    });
+    });
+    $("#save").click(function () {        
+        var url = "@Url.Action("AddEmployee", "Employee")";        
+        $.get(url, function (data) {            
+            $("#SavePopUp").html(data);
+            $("#SavePopUp").dialog('open');
+        });
+    });
+    function LoadData() {        
+        $.ajax({
+            type:"GET",
+            url: "/Employee/List",
+            content: "Application/Json",
+            async:true,
+            success: function (d) {                
+                if (d.length > 0) {                    
+                   var $Tabel = $("<table></table>").addClass("table table-responsive");
+                   var $Header = $("<thead><tr><td>FirstName</td><td>LastName</td><td>Salary</td><td>Gender</td></tr></thead>");                   
+                    $Tabel.append($Header);                   
+                    $.each(d, function (i, row) {                        
+                      var $Row = $("<tr/>");
+                      $Row.append($("<td/>").html(row.FirstName));
+                      $Row.append($("<td/>").html(row.LastName));
+                      $Row.append($("<td/>").html(row.Salary));
+                      $Row.append($("<td/>").html(row.Gender));
+                      $Row.append($("<td/>").html("<a href='Employee/AddEmp/" + row.EmployeeId + "' class='popup'>Edit</a>&nbsp | &nbsp <a href='/Employee/Delete/" + row.EmployeeId + "' class='popup'>Delete</a>"));
+                      $Tabel.append($Row);                      
+                    });
+                    $("#data").html($Tabel);
+                }
+                else {
+                    var $NoData = $("<div/>").html("<h3>No Data Found</h3>");
+                    $("#data").html($NoData);
+                }                
+            },
+            error: function (repsponse){
+                alert(repsponse.responseText);
+            }
+        });
+    }
+</script>
+
